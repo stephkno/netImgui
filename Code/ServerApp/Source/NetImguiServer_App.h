@@ -6,9 +6,15 @@
 //=============================================================================================
 // SELECT RENDERING/OS API HERE
 //=============================================================================================
-#define HAL_API_PLATFORM_WIN32_DX11		1
-#define HAL_API_PLATFORM_GLFW_GL3		0														// Note: Currently doesn't work on VS2026
-#define HAL_API_PLATFORM_SOKOL			0														// Sokol Lib needs to be updated to latest Dear ImGui 1.92 support for this to work
+#ifndef HAL_API_PLATFORM_WIN32_DX11
+#   define HAL_API_PLATFORM_WIN32_DX11		0
+#endif
+#ifndef HAL_API_PLATFORM_GLFW_GL3
+#   define HAL_API_PLATFORM_GLFW_GL3		0														// Note: Currently doesn't work on VS2026
+#endif
+#ifndef HAL_API_PLATFORM_SOKOL
+#   define HAL_API_PLATFORM_SOKOL			0														// Sokol Lib needs to be updated to latest Dear ImGui 1.92 support for this to work
+#endif
 #define HAL_API_RENDERTARGET_INVERT_Y	(HAL_API_PLATFORM_GLFW_GL3 || HAL_API_PLATFORM_SOKOL)	// Invert client render target Y axis (since OpenGL start texture UV from BottomLeft instead of DirectX TopLeft)
 //=============================================================================================
 

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <algorithm>
-#include <NetImgui_Api.h>
+#include "../../Client/NetImgui_Api.h"
+#include "../../ThirdParty/DearImgui/imgui.h"
 #include <Private/NetImgui_CmdPackets.h>
 
 #include "NetImguiServer_App.h"

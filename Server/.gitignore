@@ -1,0 +1,13 @@
+# Build outputs
+netimgui_server
+*.o
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build directories
+build/

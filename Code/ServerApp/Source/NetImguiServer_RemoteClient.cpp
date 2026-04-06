@@ -1,4 +1,6 @@
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include "NetImguiServer_App.h"
+#include "../../ThirdParty/DearImgui/imgui_internal.h"
 #include "NetImguiServer_RemoteClient.h"
 #include "NetImguiServer_Config.h"
 #include "NetImguiServer_UI.h"

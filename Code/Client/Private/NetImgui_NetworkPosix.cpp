@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <netinet/tcp.h> // Required for TCP_NODELAY
+#include <string>
 
 #include "NetImgui_CmdPackets.h" 
 
