@@ -293,9 +293,8 @@ NetImguiImDrawData*	Client::GetImguiDrawData(ImTextureID EmtpyTextureID)
 			for(int drawIdx(0); drawIdx<pCmdList->CmdBuffer.size(); ++drawIdx)
 			{
 				// if any texture ref is still not OK, keep waiting
-				ImTextureStatus s = mpPendingDrawData->CmdLists[i]->CmdBuffer[drawIdx].TexRef.GetTexData() ?
-					mpPendingDrawData->CmdLists[i]->CmdBuffer[drawIdx].TexRef.GetTexData()->Status :
-					ImTextureStatus_OK;
+				ImTextureData* texData = mpPendingDrawData->CmdLists[i]->CmdBuffer[drawIdx].TexRef._TexData;
+				ImTextureStatus s = texData ? texData->Status : ImTextureStatus_OK;
 				bStillPending |= (s != ImTextureStatus_OK && s != ImTextureStatus_Destroyed);
 			}
 		}
