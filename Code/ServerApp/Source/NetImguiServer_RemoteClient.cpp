@@ -173,6 +173,7 @@ void Client::ProcessPendingTextureCmds()
 
 void Client::Initialize()
 {
+	
 	mConnectedTime			= std::chrono::steady_clock::now();
 	mLastUpdateTime			= std::chrono::steady_clock::now() - std::chrono::hours(1);
 	mLastDrawFrame			= std::chrono::steady_clock::now();
@@ -191,6 +192,7 @@ void Client::Initialize()
 	mBGSettings				= NetImgui::Internal::CmdBackground();	// Assign background default value, until we receive first update from client
 	mPendingRcv				= NetImgui::Internal::PendingCom();
 	mPendingSend			= NetImgui::Internal::PendingCom();
+	NetImgui::Internal::netImguiDeleteSafe(mpPendingDrawData);
 	NetImgui::Internal::netImguiDeleteSafe(mpImguiDrawData);
 	NetImgui::Internal::netImguiDeleteSafe(mpFrameDrawPrev);
 }
@@ -283,10 +285,27 @@ NetImguiImDrawData*	Client::GetImguiDrawData(ImTextureID EmtpyTextureID)
 	// DrawData's textures should now have been created, safe to use it
 	if( mpPendingDrawData )
 	{
-		NetImgui::Internal::netImguiDeleteSafe( mpImguiDrawData );
-		mpImguiDrawData		= mpPendingDrawData;
-		mLastDrawFrameIndex	= mpImguiDrawData->mFrameIndex;
-		mpPendingDrawData	= nullptr;
+		bool bStillPending = false;
+		// re-check if textures are ready
+		for(int i(0); i<mpPendingDrawData->CmdListsCount; ++i)
+		{
+			ImDrawList* pCmdList = mpPendingDrawData->CmdLists[i];
+			for(int drawIdx(0); drawIdx<pCmdList->CmdBuffer.size(); ++drawIdx)
+			{
+				// if any texture ref is still not OK, keep waiting
+				ImTextureStatus s = mpPendingDrawData->CmdLists[i]->CmdBuffer[drawIdx].TexRef.GetTexData() ?
+					mpPendingDrawData->CmdLists[i]->CmdBuffer[drawIdx].TexRef.GetTexData()->Status :
+					ImTextureStatus_OK;
+				bStillPending |= (s != ImTextureStatus_OK && s != ImTextureStatus_Destroyed);
+			}
+		}
+		if( !bStillPending )
+		{
+			NetImgui::Internal::netImguiDeleteSafe( mpImguiDrawData );
+			mpImguiDrawData   = mpPendingDrawData;
+			mLastDrawFrameIndex = mpImguiDrawData->mFrameIndex;
+			mpPendingDrawData = nullptr;
+		}
 	}
 
 	// Check if a new frame has been added. If yes, then take ownership of it.
