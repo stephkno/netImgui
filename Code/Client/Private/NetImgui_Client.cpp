@@ -6,6 +6,8 @@
 #include "NetImgui_Network.h"
 #include "NetImgui_CmdPackets.h"
 
+#include <iostream>
+
 namespace NetImgui { namespace Internal { namespace Client 
 {
 
@@ -410,6 +412,13 @@ bool Communications_Initialize(ClientInfo& client)
 		client.mBGSettingSent.mTextureId	= client.mBGSetting.mTextureId-1u;	// Force sending the Background settings (by making different than current settings)
 		client.mFrameIndex					= 0;
 		client.mClientTextureIDNext			= 0;
+
+		// Force ContextOverride to re-run on next NewFrame by clearing overridden state
+		if (client.IsContextOverriden())
+		{
+			client.ContextRestore();
+		}
+
 		client.mServerForceConnectEnabled	= (cmdVersionRcv.mFlags & static_cast<uint8_t>(CmdVersion::eFlags::ConnectExclusive)) == 0;
 		client.mPendingRcv					= PendingCom();
 		client.mPendingSend					= PendingCom();
@@ -619,6 +628,8 @@ void ClientInfo::ContextOverride()
 #if NETIMGUI_IMGUI_TEXTURES_ENABLED
 		mFontSavedScaling 				= ImGui::GetStyle().FontScaleDpi;
 		newIO.BackendFlags				|= ImGuiBackendFlags_RendererHasTextures;
+		mClientTextureIDNext = 0; // Reset texture ID counter to prevent ID mismatch on reconnect
+		std::cout << "ContextOverride: mClientTextureIDNext=" << mClientTextureIDNext << ", Textures.Size=" << ImGui::GetPlatformIO().Textures.Size << std::endl;
 		TextureTrackingUpdate(true); // Force resend all Dear Imgui managed textures
 #else
 		if( mFontCreationFunction != nullptr )
@@ -635,6 +646,9 @@ void ClientInfo::ContextOverride()
 //=================================================================================================
 void ClientInfo::ContextRestore()
 {
+	printf("ContextRestore: entry IsContextOverriden=%d mSavedContext=%d\n", 
+    IsContextOverriden(), mSavedContextValues.mSavedContext);
+	
 	// Note: only happens if context overriden is same as current one, to prevent trying to restore to a deleted context
 	if (IsContextOverriden() && ImGui::GetCurrentContext() == mpContext)
 	{
@@ -667,7 +681,9 @@ void ClientInfo::ContextRestore()
 		}
 #endif
 		mSavedContextValues.Restore(mpContext);
+		mClientTextureIDNext = 0; // Reset texture ID counter to prevent ID mismatch on reconnect
 	}
+	printf("ContextRestore: exit IsContextOverriden=%d\n", IsContextOverriden());
 }
 
 //=================================================================================================
@@ -765,7 +781,12 @@ void ClientInfo::TextureTrackingUpdate(bool bResendAll)
 			{
 				// @sammyfreg todo 	UserID and mClientTextureIDNext used for dear imgui managed's textures
 				//					could potentially collide when generating ClientTextureID. Needs something more robust.
-				TexData->UniqueID 		= ++mClientTextureIDNext;
+				TexData->UniqueID = ++mClientTextureIDNext;
+				printf("TextureTrackingUpdate: resending tex oldUID=%llu newUID=%llu status=%d\n", 
+					(unsigned long long)(TexData->UniqueID-1),
+					(unsigned long long)TexData->UniqueID,
+					(int)TexStatus);
+					
 				CmdTexture* pCmdTexture	= TextureCmdAllocate(ConvertToClientTexID(ClientTextureRef), w, h, TexFormat, dataSize);
 				if( pCmdTexture )
 				{

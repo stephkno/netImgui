@@ -138,7 +138,7 @@ void App_Draw()
 {
     // Check if we should draw this frame
     // NetImgui::NewFrame(true) enables frame skipping for efficiency
-    if (!NetImgui::IsConnected() || !NetImgui::NewFrame(true))
+    if (!NetImgui::NewFrame(true))
     {
         return;  // Skip this frame
     }

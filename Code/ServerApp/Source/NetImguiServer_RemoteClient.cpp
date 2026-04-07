@@ -104,6 +104,7 @@ void Client::ProcessPendingTextureCmds()
 		// Delete a texture on request or when creating new one with same ClientTextureID
 		if( !isUpdate && serverTex )
 		{
+			printf("SERVER: deleting old texture clientID=%llu\n", (unsigned long long)pTextureCmd->mTextureClientID);
 			serverTex->MarkForDelete();
 			mTextureTable.erase(texIt);
 		}
@@ -113,6 +114,9 @@ void Client::ProcessPendingTextureCmds()
 		{
 			serverTex = NetImguiServer::App::CreateTexture(*pTextureCmd, texDataSize);
 			if( serverTex ){
+				printf("SERVER: created new texture clientID=%llu status=%d\n", 
+					(unsigned long long)pTextureCmd->mTextureClientID,
+					(int)serverTex->mTexData.Status);
 				serverTex->mOwnerClientIndex = static_cast<int32_t>(mClientIndex);
 				mTextureTable.insert({pTextureCmd->mTextureClientID, serverTex} );
 			}
@@ -318,7 +322,7 @@ NetImguiImDrawData*	Client::GetImguiDrawData(ImTextureID EmtpyTextureID)
 		// wait 1 frame to display it
 		if( bHasPendingTextureUpdate )
 		{
-			
+			printf("SERVER: holding drawdata, tex not ready\n");
 			mpPendingDrawData = pPendingDrawData;
 		}
 		// New valid DrawData, use it for display

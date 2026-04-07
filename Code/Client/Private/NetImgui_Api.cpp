@@ -47,7 +47,16 @@ bool ConnectToApp(const char* clientName, const char* ServerHost, uint32_t serve
 	while (client.IsActive())
 		std::this_thread::yield();
 
-	client.ContextRestore();		// Restore context setting override, after a disconnect
+#if !NETIMGUI_IMGUI_TEXTURES_ENABLED
+	client.mpFontTextureData = nullptr;
+	client.mFontTextureID    = 0;
+	client.mbFontUploaded    = false;
+#endif
+
+	if (client.IsContextOverriden())
+	{
+		client.ContextRestore();
+	}
 	client.ContextRemoveHooks();	// Remove hooks callback only when completely disconnected
 
 	StringCopy(client.mName, (clientName == nullptr || clientName[0] == 0 ? "Unnamed" : clientName));
@@ -78,8 +87,20 @@ bool ConnectFromApp(const char* clientName, uint32_t serverPort, ThreadFunctPtr 
 
 	while (client.IsActive())
 		std::this_thread::yield();
+
+	printf("ConnectFromApp: IsContextOverriden=%d\n", client.IsContextOverriden());
+
+	if (client.IsContextOverriden())
+	{
+		client.ContextRestore();
+	}
 	
-	client.ContextRestore();		// Restore context setting override, after a disconnect
+#if !NETIMGUI_IMGUI_TEXTURES_ENABLED
+	client.mpFontTextureData = nullptr;
+	client.mFontTextureID    = 0;
+	client.mbFontUploaded    = false;
+#endif
+	
 	client.ContextRemoveHooks();	// Remove hooks callback only when completly disconnected
 	
 	StringCopy(client.mName, (clientName == nullptr || clientName[0] == 0 ? "Unnamed" : clientName));
@@ -195,8 +216,8 @@ bool NewFrame(bool bSupportFrameSkip)
 	{		
 		ImGui::SetCurrentContext(client.mpContext);
 
-		// Save current context settings and override settings to fit our netImgui usage 
-		if (!client.IsContextOverriden() ){
+		if (!client.IsContextOverriden())
+		{
 			client.ContextOverride();
 		}
 
