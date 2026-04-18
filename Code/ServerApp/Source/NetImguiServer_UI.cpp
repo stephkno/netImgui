@@ -961,7 +961,7 @@ ImVec4 DrawImguiContent()
 	Popup_ConfirmDisconnect();
 	Popup_AboutNetImgui();
 
-	DrawImguiContent_MainMenu();
+//	DrawImguiContent_MainMenu();
 	DrawImguiContent_SetupDocking();
 	DrawImguiContent_Clients();
 	//ImGui::ShowDemoWindow();

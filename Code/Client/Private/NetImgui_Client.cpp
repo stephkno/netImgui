@@ -782,10 +782,11 @@ void ClientInfo::TextureTrackingUpdate(bool bResendAll)
 				// @sammyfreg todo 	UserID and mClientTextureIDNext used for dear imgui managed's textures
 				//					could potentially collide when generating ClientTextureID. Needs something more robust.
 				TexData->UniqueID = ++mClientTextureIDNext;
-				printf("TextureTrackingUpdate: resending tex oldUID=%llu newUID=%llu status=%d\n", 
+				/*printf("TextureTrackingUpdate: resending tex oldUID=%llu newUID=%llu status=%d\n", 
 					(unsigned long long)(TexData->UniqueID-1),
 					(unsigned long long)TexData->UniqueID,
 					(int)TexStatus);
+				*/
 					
 				CmdTexture* pCmdTexture	= TextureCmdAllocate(ConvertToClientTexID(ClientTextureRef), w, h, TexFormat, dataSize);
 				if( pCmdTexture )

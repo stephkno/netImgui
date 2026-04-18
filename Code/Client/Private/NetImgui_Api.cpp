@@ -88,7 +88,7 @@ bool ConnectFromApp(const char* clientName, uint32_t serverPort, ThreadFunctPtr 
 	while (client.IsActive())
 		std::this_thread::yield();
 
-	printf("ConnectFromApp: IsContextOverriden=%d\n", client.IsContextOverriden());
+	//printf("ConnectFromApp: IsContextOverriden=%d\n", client.IsContextOverriden());
 
 	if (client.IsContextOverriden())
 	{
