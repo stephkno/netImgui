@@ -460,7 +460,7 @@ void Popup_ClientConfigDelete()
 				ImGui::EndListBox();
 			}
 
-			ImGui::NewLine();
+			ImGui::NewLine();	
 			ImGui::Separator();
 			bOpenDelConfirm &= !ImGui::Button("Cancel", ImVec2(ImGui::GetContentRegionAvail().x/2.f, 0));
 			ImGui::SetItemDefaultFocus();
@@ -635,7 +635,17 @@ void DrawImguiContent_Clients()
 	//---------------------------------------------------------------------------------------------
 	if (!hasConnection)
 	{
-		gPopup_ServerConfig_Show = true;
+		static bool sConfigShown = false;
+		if (!sConfigShown)
+		{
+			gPopup_ServerConfig_Show = true;
+			sConfigShown = true;
+		}
+	}
+	else
+	{
+		static bool sConfigShown = false;
+		sConfigShown = false;
 	}
 
 	ImGui::PopStyleVar(3);
