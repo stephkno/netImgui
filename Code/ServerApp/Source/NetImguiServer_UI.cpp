@@ -943,8 +943,18 @@ ImVec4 DrawImguiContent()
 	Popup_ClientConfigDelete();
 	Popup_ConfirmDisconnect();
 	//Popup_AboutNetImgui();
+	
+	bool hasConnection = false;
+	for(int i = 0; i < RemoteClient::Client::GetCountMax(); i++){
+		if(RemoteClient::Client::Get(i).mbIsConnected){
+			hasConnection = true;
+			break;
+		}
+	}
+	if(hasConnection){
+		DrawImguiContent_MainMenu_Clients();
+	}
 
-	DrawImguiContent_MainMenu_Clients();
 	DrawImguiContent_SetupDocking();
 	DrawImguiContent_Clients();
 	//ImGui::ShowDemoWindow();
