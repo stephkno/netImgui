@@ -631,38 +631,11 @@ void DrawImguiContent_Clients()
 	}
 
 	//---------------------------------------------------------------------------------------------
-	// Display some instruction when no connection detected
+	// Display config window when no connection detected
 	//---------------------------------------------------------------------------------------------
 	if (!hasConnection)
 	{
-		ImGui::SetNextWindowBgAlpha(1.0);
-		ImGui::SetNextWindowDockID(gMainDockID, ImGuiCond_Always);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding , ImVec2(24.f,24.f));
-		if (ImGui::Begin("Information", nullptr, 0))
-		{
-			DrawCenteredBackground(gpBackgroundTexture, ImVec4(1.f, 1.f, 1.f, 0.15f));
-
-			ImGui::TextColored(kColorTitle, "%s", "Purpose:");
-			ImGui::PushStyleColor(ImGuiCol_Text, kColorContent);
-			ImGui::TextWrapped("This 'NetImgui Server' application allows connection to clients running with the 'NetImGui Library.");
-			ImGui::PopStyleColor();
-			ImGui::NewLine();
-
-			ImGui::TextColored(kColorTitle, "%s", "Instructions:");
-			ImGui::PushStyleColor(ImGuiCol_Text, kColorContent);
-			ImGui::TextWrapped("There are 2 ways of establishing a connection between this Server and a Client.");
-			ImGui::TextWrapped(" (A) The client can connect directly to this server, using 'NetImgui::ConnectToApp(...)' on port %i", NetImguiServer::Config::Server::sPort);
-			ImGui::TextWrapped(" (B) The client can wait for a Server connection using 'NetImgui::ConnectFrom(...)' and adding the Client configuration on the Server.");
-			ImGui::PopStyleColor();
-			ImGui::NewLine();
-
-			ImGui::TextColored(kColorTitle, "%s", "Note:");
-			ImGui::PushStyleColor(ImGuiCol_Text, kColorContent);
-			ImGui::TextWrapped("'Multiple clients can be connected to this server. Each client window can be undocked and moved around independently.");
-			ImGui::PopStyleColor();
-		}
-		ImGui::End();
-		ImGui::PopStyleVar();
+		gPopup_ServerConfig_Show = true;
 	}
 
 	ImGui::PopStyleVar(3);
@@ -959,7 +932,7 @@ ImVec4 DrawImguiContent()
 	Popup_ClientConfigEdit();
 	Popup_ClientConfigDelete();
 	Popup_ConfirmDisconnect();
-	Popup_AboutNetImgui();
+	//Popup_AboutNetImgui();
 
 //	DrawImguiContent_MainMenu();
 	DrawImguiContent_SetupDocking();
