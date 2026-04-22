@@ -951,7 +951,7 @@ ImVec4 DrawImguiContent()
 			break;
 		}
 	}
-	if(hasConnection){
+	if(!hasConnection){
 		DrawImguiContent_MainMenu_Clients();
 	}
 
