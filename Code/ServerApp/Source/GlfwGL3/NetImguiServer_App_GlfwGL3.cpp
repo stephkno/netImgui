@@ -140,11 +140,16 @@ int main(int argc, char **argv) // @SAMPLE_EDIT (added parameters names so we ca
     io.ConfigDpiScaleViewports = true;      // [Experimental] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
 #endif
 
+    // Make window backgrounds transparent so client background shows through
+    style.Colors[ImGuiCol_WindowBg].w = 0.0f;
+    style.Colors[ImGuiCol_ChildBg].w = 0.0f;
+    style.Colors[ImGuiCol_FrameBg].w = 0.0f;
+    style.Colors[ImGuiCol_PopupBg].w = 0.0f;
+
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         style.WindowRounding = 0.0f;
-        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
 
     // Setup Platform/Renderer backends

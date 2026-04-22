@@ -20,8 +20,8 @@ namespace NetImguiServer { namespace UI
 constexpr uint32_t			kClientRemoteInvalid				= 0xFFFFFFFF;
 constexpr char				kNetImguiURL[]						= "https://github.com/sammyfreg/netImgui";
 const char*					kDataSizeUnits[]					= {"B", "KB", "MB", "GB"};
-static const  ImVec4		kColorBGClear						= ImVec4(0.8f,0.8f,0.8f, 1.f);	// Background color of the main Server window
-static const  ImVec4		kColorBGTint						= ImVec4(1.f, 1.f, 1.f, 1.f);	// Tint applied to the main server window bg logo
+static const  ImVec4		kColorBGClear						= ImVec4(0.0f,0.0f,0.0f, 0.f);	// Background color of the main Server window
+static const  ImVec4		kColorBGTint						= ImVec4(0.f, 0.f, 0.f, 0.f);	// Tint applied to the main server window bg logo
 static const ImVec4			kColorTitle							= ImVec4(0.3f,1.0f,0.3f,1.f);	// Various Server title content color
 static const ImVec4			kColorContent						= ImVec4(0.7f,0.75f,0.7f,1.f);	// Various Server text content color
 static ImGuiID				gMainDockID							= 0;
@@ -541,7 +541,7 @@ void DrawImguiContent_Clients()
 		if( client.mbIsConnected )
 		{
 			ImGui::PushID(i);
-			ImGui::SetNextWindowBgAlpha(1.0);
+			ImGui::SetNextWindowBgAlpha(0.0);
 			ImGui::SetNextWindowDockID(gMainDockID, ImGuiCond_Once);
 			bool bOpened		= true;
 			hasConnection		= true;
